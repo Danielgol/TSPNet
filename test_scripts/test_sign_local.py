@@ -92,6 +92,9 @@ def main(args, init_distributed=False):
         bleu = compute_cvpr_bleu(h, r)
         rouge_score = rouge.rouge(h, r)
 
+        for i in range(len(h)):
+            print(h[i], r[i]+"\n")
+
         print('{} set has {} samples,\n'
               'sacrebleu: {},\n'
               'CVPR BLEU scripts: {}\n'
