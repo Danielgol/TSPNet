@@ -59,5 +59,4 @@ CUDA_VISIBLE_DEVICES=0 python train.py data-bin/phoenix2014T/sp${VOCAB} \
         --encoder-layers ${ENC_LAYERS} \
         --no-last-checkpoints \
         --no-epoch-checkpoints \
-        ${PARAM_SAVE_DIR}
-
+        --save-dir checkpoint_path
