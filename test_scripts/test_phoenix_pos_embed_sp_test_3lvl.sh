@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -x -e -u -o pipefail
-CHECKPOINT= '../checkpoint_path/checkpoint_best.pt's
+CHECKPOINT= '../checkpoint_path/checkpoint_best.pt'
 
 cd ..
 
