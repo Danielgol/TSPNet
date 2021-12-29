@@ -24,7 +24,7 @@ class MultiheadAttention(nn.Module):
     def __init__(
         self,
         embed_dim,
-        num_heads,
+        num_heads=6,
         kdim=None,
         vdim=None,
         dropout=0.0,
