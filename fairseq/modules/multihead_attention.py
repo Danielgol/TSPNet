@@ -24,7 +24,7 @@ class MultiheadAttention(nn.Module):
     def __init__(
         self,
         embed_dim,
-        num_heads=6,
+        num_heads,
         kdim=None,
         vdim=None,
         dropout=0.0,
@@ -40,11 +40,11 @@ class MultiheadAttention(nn.Module):
         self.vdim = vdim if vdim is not None else embed_dim
         self.qkv_same_dim = self.kdim == embed_dim and self.vdim == embed_dim
 
-        self.num_heads = num_heads
+        self.num_heads = 6
         self.dropout = dropout
-        self.head_dim = embed_dim // num_heads
+        self.head_dim = embed_dim // 6
         assert (
-            self.head_dim * num_heads == self.embed_dim
+            self.head_dim * 6 == self.embed_dim
         ), "embed_dim must be divisible by num_heads"
         self.scaling = self.head_dim ** -0.5
 
