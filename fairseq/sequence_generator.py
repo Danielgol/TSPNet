@@ -391,110 +391,110 @@ class SequenceGenerator(object):
             assert num_remaining_sent >= 0
             if num_remaining_sent == 0:
                 break
-            print(step, max_len)
-            assert step < max_len
+                
+            if step < max_len:
 
-            if len(finalized_sents) > 0:
-                new_bsz = bsz - len(finalized_sents)
+                if len(finalized_sents) > 0:
+                    new_bsz = bsz - len(finalized_sents)
 
-                # construct batch_idxs which holds indices of batches to keep for the next pass
-                batch_mask = cand_indices.new_ones(bsz)
-                batch_mask[cand_indices.new(finalized_sents)] = 0
-                batch_idxs = batch_mask.nonzero().squeeze(-1)
+                    # construct batch_idxs which holds indices of batches to keep for the next pass
+                    batch_mask = cand_indices.new_ones(bsz)
+                    batch_mask[cand_indices.new(finalized_sents)] = 0
+                    batch_idxs = batch_mask.nonzero().squeeze(-1)
 
-                eos_mask = eos_mask[batch_idxs]
-                cand_beams = cand_beams[batch_idxs]
-                bbsz_offsets.resize_(new_bsz, 1)
-                cand_bbsz_idx = cand_beams.add(bbsz_offsets)
-                cand_scores = cand_scores[batch_idxs]
-                cand_indices = cand_indices[batch_idxs]
-                if prefix_tokens is not None:
-                    prefix_tokens = prefix_tokens[batch_idxs]
-                src_lengths = src_lengths[batch_idxs]
-                blacklist = blacklist[batch_idxs]
+                    eos_mask = eos_mask[batch_idxs]
+                    cand_beams = cand_beams[batch_idxs]
+                    bbsz_offsets.resize_(new_bsz, 1)
+                    cand_bbsz_idx = cand_beams.add(bbsz_offsets)
+                    cand_scores = cand_scores[batch_idxs]
+                    cand_indices = cand_indices[batch_idxs]
+                    if prefix_tokens is not None:
+                        prefix_tokens = prefix_tokens[batch_idxs]
+                    src_lengths = src_lengths[batch_idxs]
+                    blacklist = blacklist[batch_idxs]
 
-                scores = scores.view(bsz, -1)[batch_idxs].view(new_bsz * beam_size, -1)
-                scores_buf.resize_as_(scores)
-                tokens = tokens.view(bsz, -1)[batch_idxs].view(new_bsz * beam_size, -1)
-                tokens_buf.resize_as_(tokens)
+                    scores = scores.view(bsz, -1)[batch_idxs].view(new_bsz * beam_size, -1)
+                    scores_buf.resize_as_(scores)
+                    tokens = tokens.view(bsz, -1)[batch_idxs].view(new_bsz * beam_size, -1)
+                    tokens_buf.resize_as_(tokens)
+                    if attn is not None:
+                        attn = attn.view(bsz, -1)[batch_idxs].view(new_bsz * beam_size, attn.size(1), -1)
+                        attn_buf.resize_as_(attn)
+                    bsz = new_bsz
+                else:
+                    batch_idxs = None
+
+                # Set active_mask so that values > cand_size indicate eos or
+                # blacklisted hypos and values < cand_size indicate candidate
+                # active hypos. After this, the min values per row are the top
+                # candidate active hypos.
+                active_mask = buffer('active_mask')
+                eos_mask[:, :beam_size] |= blacklist
+                torch.add(
+                    eos_mask.type_as(cand_offsets) * cand_size,
+                    cand_offsets[:eos_mask.size(1)],
+                    out=active_mask,
+                )
+
+                # get the top beam_size active hypotheses, which are just the hypos
+                # with the smallest values in active_mask
+                active_hypos, new_blacklist = buffer('active_hypos'), buffer('new_blacklist')
+                torch.topk(
+                    active_mask, k=beam_size, dim=1, largest=False,
+                    out=(new_blacklist, active_hypos)
+                )
+
+                # update blacklist to ignore any finalized hypos
+                blacklist = new_blacklist.ge(cand_size)[:, :beam_size]
+                assert (~blacklist).any(dim=1).all()
+
+                active_bbsz_idx = buffer('active_bbsz_idx')
+                torch.gather(
+                    cand_bbsz_idx, dim=1, index=active_hypos,
+                    out=active_bbsz_idx,
+                )
+                active_scores = torch.gather(
+                    cand_scores, dim=1, index=active_hypos,
+                    out=scores[:, step].view(bsz, beam_size),
+                )
+
+                active_bbsz_idx = active_bbsz_idx.view(-1)
+                active_scores = active_scores.view(-1)
+
+                # copy tokens and scores for active hypotheses
+                torch.index_select(
+                    tokens[:, :step + 1], dim=0, index=active_bbsz_idx,
+                    out=tokens_buf[:, :step + 1],
+                )
+                torch.gather(
+                    cand_indices, dim=1, index=active_hypos,
+                    out=tokens_buf.view(bsz, beam_size, -1)[:, :, step + 1],
+                )
+                if step > 0:
+                    torch.index_select(
+                        scores[:, :step], dim=0, index=active_bbsz_idx,
+                        out=scores_buf[:, :step],
+                    )
+                torch.gather(
+                    cand_scores, dim=1, index=active_hypos,
+                    out=scores_buf.view(bsz, beam_size, -1)[:, :, step],
+                )
+
+                # copy attention for active hypotheses
                 if attn is not None:
-                    attn = attn.view(bsz, -1)[batch_idxs].view(new_bsz * beam_size, attn.size(1), -1)
-                    attn_buf.resize_as_(attn)
-                bsz = new_bsz
-            else:
-                batch_idxs = None
+                    torch.index_select(
+                        attn[:, :, :step + 2], dim=0, index=active_bbsz_idx,
+                        out=attn_buf[:, :, :step + 2],
+                    )
 
-            # Set active_mask so that values > cand_size indicate eos or
-            # blacklisted hypos and values < cand_size indicate candidate
-            # active hypos. After this, the min values per row are the top
-            # candidate active hypos.
-            active_mask = buffer('active_mask')
-            eos_mask[:, :beam_size] |= blacklist
-            torch.add(
-                eos_mask.type_as(cand_offsets) * cand_size,
-                cand_offsets[:eos_mask.size(1)],
-                out=active_mask,
-            )
+                # swap buffers
+                tokens, tokens_buf = tokens_buf, tokens
+                scores, scores_buf = scores_buf, scores
+                if attn is not None:
+                    attn, attn_buf = attn_buf, attn
 
-            # get the top beam_size active hypotheses, which are just the hypos
-            # with the smallest values in active_mask
-            active_hypos, new_blacklist = buffer('active_hypos'), buffer('new_blacklist')
-            torch.topk(
-                active_mask, k=beam_size, dim=1, largest=False,
-                out=(new_blacklist, active_hypos)
-            )
-
-            # update blacklist to ignore any finalized hypos
-            blacklist = new_blacklist.ge(cand_size)[:, :beam_size]
-            assert (~blacklist).any(dim=1).all()
-
-            active_bbsz_idx = buffer('active_bbsz_idx')
-            torch.gather(
-                cand_bbsz_idx, dim=1, index=active_hypos,
-                out=active_bbsz_idx,
-            )
-            active_scores = torch.gather(
-                cand_scores, dim=1, index=active_hypos,
-                out=scores[:, step].view(bsz, beam_size),
-            )
-
-            active_bbsz_idx = active_bbsz_idx.view(-1)
-            active_scores = active_scores.view(-1)
-
-            # copy tokens and scores for active hypotheses
-            torch.index_select(
-                tokens[:, :step + 1], dim=0, index=active_bbsz_idx,
-                out=tokens_buf[:, :step + 1],
-            )
-            torch.gather(
-                cand_indices, dim=1, index=active_hypos,
-                out=tokens_buf.view(bsz, beam_size, -1)[:, :, step + 1],
-            )
-            if step > 0:
-                torch.index_select(
-                    scores[:, :step], dim=0, index=active_bbsz_idx,
-                    out=scores_buf[:, :step],
-                )
-            torch.gather(
-                cand_scores, dim=1, index=active_hypos,
-                out=scores_buf.view(bsz, beam_size, -1)[:, :, step],
-            )
-
-            # copy attention for active hypotheses
-            if attn is not None:
-                torch.index_select(
-                    attn[:, :, :step + 2], dim=0, index=active_bbsz_idx,
-                    out=attn_buf[:, :, :step + 2],
-                )
-
-            # swap buffers
-            tokens, tokens_buf = tokens_buf, tokens
-            scores, scores_buf = scores_buf, scores
-            if attn is not None:
-                attn, attn_buf = attn_buf, attn
-
-            # reorder incremental state in decoder
-            reorder_state = active_bbsz_idx
+                # reorder incremental state in decoder
+                reorder_state = active_bbsz_idx
 
         # sort by score descending
         for sent in range(len(finalized)):
