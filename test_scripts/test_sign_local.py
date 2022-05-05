@@ -108,7 +108,7 @@ def validate(args, trainer, task, epoch_itr, subsets):
 
     for subset in subsets:
         for i in subset:
-            print(len(i))
+            print(i[0])
 
     if args.fixed_validation_seed is not None:
         # set fixed seed for every validation
