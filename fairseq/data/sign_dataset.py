@@ -17,6 +17,8 @@ class SignDataset(FairseqDataset):
     def __getitem__(self, index):
         identifier = self.dataset[index]
 
+        print(self.dataset[index])
+
         all_features = []
         for level_feat_roots in self.feat_roots:
             features = [torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0)
