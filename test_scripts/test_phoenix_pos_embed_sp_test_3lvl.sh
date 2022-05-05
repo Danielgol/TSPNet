@@ -31,7 +31,7 @@ python test_scripts/test_sign_local.py data-bin/phoenix2014T/sp${VOCAB} \
         --optimizer adam \
         --activation-fn gelu \
         --criterion label_smoothed_cross_entropy \
-        --valid-subset valid \
+        --valid-subset test \
         --label-smoothing 0.1 \
         --weight-decay 0.0001 \
         --dropout ${DROPOUT} \
