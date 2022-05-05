@@ -82,8 +82,6 @@ def main(args, init_distributed=False):
     train_meter.start()
     valid_subsets = args.valid_subset.split(',')
 
-    print(args.valid_subset)
-
     tokenize = sacrebleu.DEFAULT_TOKENIZER if not args.eval_tokenized_bleu else 'none'
     hyps, refs = validate(args, trainer, task, epoch_itr, valid_subsets)
 
