@@ -115,7 +115,6 @@ def validate(args, trainer, task, epoch_itr, subsets):
 
     for subset in subsets:
         # Initialize data iterator
-
         itr = task.get_batch_iterator(
             dataset=task.dataset(subset),
             max_tokens=args.max_tokens_valid,
@@ -133,31 +132,10 @@ def validate(args, trainer, task, epoch_itr, subsets):
         ).next_epoch_itr(shuffle=False)
         
         progress = progress_bar.build_progress_bar(
-            args, itr, epoch_itr.epoch, no_progress_bar='simple',
-        )
-
-        '''
-        itr = task.get_batch_iterator(
-            dataset=task.dataset(subset),
-            max_tokens=args.max_tokens_valid,
-            max_sentences=args.max_sentences_valid,
-            max_positions=utils.resolve_max_positions(
-                task.max_positions(),
-                trainer.get_model().max_positions(),
-            ),
-            ignore_invalid_inputs=args.skip_invalid_size_inputs_valid_test,
-            required_batch_size_multiple=args.required_batch_size_multiple,
-            seed=args.seed,
-            num_shards=args.distributed_world_size,
-            shard_id=args.distributed_rank,
-            num_workers=args.num_workers,
-        ).next_epoch_itr(shuffle=False)
-        progress = progress_bar.build_progress_bar(
             args, itr, epoch_itr.epoch,
             prefix='valid on \'{}\' subset'.format(subset),
             no_progress_bar='simple'
         )
-        '''
 
         # create a new root metrics aggregator so validation metrics
         # don't pollute other aggregators (e.g., train meters)
@@ -167,7 +145,7 @@ def validate(args, trainer, task, epoch_itr, subsets):
             print("\n\n\n\n",len(progress),"\n\n\n\n")
 
             for sample in progress:
-                #print(sample)
+                print(sample)
                 logging_output, h, r = trainer.valid_step(sample, generate=True)
 
                 hyps.extend(h)
