@@ -18,14 +18,14 @@ class SignDataset(FairseqDataset):
         identifier = self.dataset[index]
         all_features = []
         for level_feat_roots in self.feat_roots:
-            print(os.path.join(identifier + '.pt'))
-            #features = [torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0)
-            #            for feat_root in level_feat_roots if feat_root]
-            #features = torch.cat(features, dim=1)
-            #all_features.append(features)
+            #print(os.path.join(identifier + '.pt'))
+            features = [torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0)
+                        for feat_root in level_feat_roots if feat_root]
+            features = torch.cat(features, dim=1)
+            all_features.append(features)
 
-        print("\n\n\nOPAAAAAAAAAAAAA:",len(all_features),"\n\n\n\n")
-        #return all_features
+        #print("\n\n\nOPAAAAAAAAAAAAA:",len(all_features),"\n\n\n\n")
+        return all_features
 
     def __len__(self):
         return len(self.dataset)
