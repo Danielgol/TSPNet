@@ -37,7 +37,7 @@ class SignDataset(FairseqDataset):
             features = torch.cat(features, dim=1)
 
             if features_2.shape == features.shape:
-                print("YES")
+                print(features_2.shape, features.shape)
             else:
                 print("NOPS")
 
@@ -47,8 +47,7 @@ class SignDataset(FairseqDataset):
         #for i in range(len(all_features)):
         #    print(all_features[i].shape)
         #print(len(all_features))
-        #print("\n\n\nOPAAAAAAAAAAAAA:",len(all_features),"\n\n\n\n")
-        #return all_features
+        return all_features
 
     def __len__(self):
         return len(self.dataset)
