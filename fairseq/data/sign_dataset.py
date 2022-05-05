@@ -21,7 +21,7 @@ class SignDataset(FairseqDataset):
 
             #print(level_feat_roots, os.path.join(identifier + '.pt'))
             tensor = torch.load(os.path.join(level_feat_roots[0], identifier + '.pt'))
-            print(os.path.join(os.path.join(level_feat_roots[0], identifier + '.pt')), tensor[0].shape)
+            print(os.path.join(os.path.join(level_feat_roots[0], identifier + '.pt')), len(tensor))
 
 
 
