@@ -36,7 +36,7 @@ class SignDataset(FairseqDataset):
                         for feat_root in level_feat_roots if feat_root]
             features = torch.cat(features, dim=1)
 
-            if features_2 == features:
+            if features_2.shape == features.shape:
                 print("YES")
             else:
                 print("NOPS")
