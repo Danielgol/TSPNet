@@ -141,8 +141,8 @@ def validate(args, trainer, task, epoch_itr, subsets):
         # don't pollute other aggregators (e.g., train meters)
         with metrics.aggregate(new_root=True) as agg:
             hyps, refs = [], []
+            
             for sample in progress:
-                #print(sample)
                 logging_output, h, r = trainer.valid_step(sample, generate=True)
 
                 hyps.extend(h)
