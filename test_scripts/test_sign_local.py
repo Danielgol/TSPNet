@@ -130,7 +130,7 @@ def validate(args, trainer, task, epoch_itr, subsets):
             shard_id=args.distributed_rank,
             num_workers=args.num_workers,
         ).next_epoch_itr(shuffle=False)
-        
+
         progress = progress_bar.build_progress_bar(
             args, itr, epoch_itr.epoch,
             prefix='valid on \'{}\' subset'.format(subset),
@@ -142,10 +142,10 @@ def validate(args, trainer, task, epoch_itr, subsets):
         with metrics.aggregate(new_root=True) as agg:
             hyps, refs = [], []
 
-            print("\n\n\n\n",len(progress),"\n\n\n\n")
+            #print("\n\n\n\n",len(progress),"\n\n\n\n")
 
             for sample in progress:
-                print(sample)
+                #print(sample)
                 logging_output, h, r = trainer.valid_step(sample, generate=True)
 
                 hyps.extend(h)
