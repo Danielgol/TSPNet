@@ -115,6 +115,22 @@ def validate(args, trainer, task, epoch_itr, subsets):
 
     for subset in subsets:
         # Initialize data iterator
+
+        itr = epoch_itr.next_epoch_itr(
+            fix_batches_to_gpus=args.fix_batches_to_gpus,
+            shuffle=False,
+        )
+        update_freq = (
+            args.update_freq[epoch_itr.epoch - 1]
+            if epoch_itr.epoch <= len(args.update_freq)
+            else args.update_freq[-1]
+        )
+        itr = iterators.GroupedIterator(itr, update_freq)
+        progress = progress_bar.build_progress_bar(
+            args, itr, epoch_itr.epoch, no_progress_bar='simple',
+        )
+
+        '''
         itr = task.get_batch_iterator(
             dataset=task.dataset(subset),
             max_tokens=args.max_tokens_valid,
@@ -135,6 +151,7 @@ def validate(args, trainer, task, epoch_itr, subsets):
             prefix='valid on \'{}\' subset'.format(subset),
             no_progress_bar='simple'
         )
+        '''
 
         # create a new root metrics aggregator so validation metrics
         # don't pollute other aggregators (e.g., train meters)
