@@ -26,7 +26,7 @@ class SignDataset(FairseqDataset):
             features = torch.cat(features, dim=1)
             all_features.append(features)
 
-        print(len(all_features))
+        print("OPAAAAAAAAAAAAA:",len(all_features))
         return all_features
 
     def __len__(self):
