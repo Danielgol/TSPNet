@@ -27,7 +27,7 @@ class SignDataset(FairseqDataset):
 
             for feat_root in level_feat_roots:
                 if feat_root != None:
-                    features_2.append(torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt'), dim=0)))
+                    features_2.append(torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0))
             features_2 = torch.cat(features_2, dim=1)
 
 
