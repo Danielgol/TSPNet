@@ -106,10 +106,6 @@ def main(args, init_distributed=False):
 def validate(args, trainer, task, epoch_itr, subsets):
     """Evaluate the model on the validation set(s) and return the losses."""
 
-    for subset in subsets:
-        for i in subset:
-            print(i[0])
-
     if args.fixed_validation_seed is not None:
         # set fixed seed for every validation
         utils.set_torch_seed(args.fixed_validation_seed)
