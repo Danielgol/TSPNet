@@ -42,7 +42,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py data-bin/phoenix2014T/sp${VOCAB} \
         --label-smoothing 0.1 \
         --weight-decay 0.0001 \
         --dropout ${DROPOUT} \
-        --max-epoch 200 \
+        --max-epoch 4 \
         --save-interval 1 \
         --eval-bleu \
         --eval-bleu-args '{"beam": 10, "max_len_a": 1.2, "max_len_b": 10}' \
