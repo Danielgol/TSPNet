@@ -161,7 +161,7 @@ def validate(args, trainer, task, epoch_itr, subsets):
             print("\n\n\n\n",len(progress),"\n\n\n\n")
 
             for sample in progress:
-                print(sample)
+                #print(sample)
                 logging_output, h, r = trainer.valid_step(sample, generate=True)
 
                 hyps.extend(h)
