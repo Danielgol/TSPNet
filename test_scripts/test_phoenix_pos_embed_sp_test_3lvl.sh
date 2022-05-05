@@ -49,5 +49,5 @@ python test_scripts/test_sign_local.py data-bin/phoenix2014T/sp${VOCAB} \
         --decoder-embed-path data-bin/phoenix2014T/sp${VOCAB}/emb \
         --decoder-attention-heads 10 \
         --encoder-layers ${ENC_LAYERS} \
-        --disable_validation \
+        --disable-validation \
         --restore-file ${CHECKPOINT}
