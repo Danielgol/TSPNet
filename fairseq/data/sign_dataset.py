@@ -18,7 +18,9 @@ class SignDataset(FairseqDataset):
         identifier = self.dataset[index]
         all_features = []
         for level_feat_roots in self.feat_roots:
-            print(os.path.join(identifier + '.pt'))
+            print(level_feat_roots, os.path.join(identifier + '.pt'))
+
+
             features = [torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0)
                         for feat_root in level_feat_roots if feat_root]
             features = torch.cat(features, dim=1)
