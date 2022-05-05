@@ -23,11 +23,25 @@ class SignDataset(FairseqDataset):
             tensor = torch.load(os.path.join(level_feat_roots[0], identifier + '.pt'))
             print(os.path.join(os.path.join(level_feat_roots[0], identifier + '.pt')), len(tensor))
 
+            features_2 = []
+
+            for feat_root in level_feat_roots:
+                if feat_root != None:
+                    features_2.append(torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt'), dim=0)))
+            features_2 = torch.cat(features_2, dim=1)
+
 
 
             features = [torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0)
                         for feat_root in level_feat_roots if feat_root]
             features = torch.cat(features, dim=1)
+
+            if features_2 == features:
+                print("YES")
+            else:
+                print("NOPS")
+
+
             all_features.append(features)
 
         #for i in range(len(all_features)):
