@@ -213,6 +213,8 @@ class TranslationSign(FairseqTask):
             multilv_args=multilv_args
         )
 
+        print(self.datasets[split])
+
     @property
     def target_dictionary(self):
         """Return the target :class:`~fairseq.data.Dictionary`."""

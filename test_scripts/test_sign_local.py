@@ -108,7 +108,6 @@ def validate(args, trainer, task, epoch_itr, subsets):
 
     if args.fixed_validation_seed is not None:
         # set fixed seed for every validation
-        print("EEEEH")
         utils.set_torch_seed(args.fixed_validation_seed)
 
     hypothes = []
