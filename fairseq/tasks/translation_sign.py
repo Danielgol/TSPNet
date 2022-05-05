@@ -185,8 +185,6 @@ class TranslationSign(FairseqTask):
         assert len(paths) > 0
         data_path = paths[0]
 
-        print("AQUI:::",data_path, split)
-
         src_feat_roots = []
         max_lv = self.args.num_levels
         for lv in range(max_lv):
