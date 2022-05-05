@@ -20,9 +20,8 @@ class SignDataset(FairseqDataset):
         for level_feat_roots in self.feat_roots:
 
             #print(level_feat_roots, os.path.join(identifier + '.pt'))
-            tensor = torch.load(os.path.join(level_feat_roots[0], identifier + '.pt'))
-            print(os.path.join(os.path.join(level_feat_roots[0], identifier + '.pt')), len(tensor))
-
+            #tensor = torch.load(os.path.join(level_feat_roots[0], identifier + '.pt'))
+            #print(os.path.join(os.path.join(level_feat_roots[0], identifier + '.pt')), len(tensor))
 
             '''
             features = []
@@ -32,23 +31,12 @@ class SignDataset(FairseqDataset):
             features = torch.cat(features, dim=1)
             '''
 
-
-            #features = [torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0)
-            #            for feat_root in level_feat_roots if feat_root]
-            #features = torch.cat(features, dim=1)
-
-            #if features_2.shape == features.shape:
-            #    print(features_2.shape, features.shape)
-            #else:
-            #    print("NOPS")
-
-
-            #all_features.append(features)
-
-        #for i in range(len(all_features)):
-        #    print(all_features[i].shape)
-        #print(len(all_features))
-        #return all_features
+            features = [torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0)
+                        for feat_root in level_feat_roots if feat_root]
+            features = torch.cat(features, dim=1)
+            all_features.append(features)
+            
+        return all_features
 
     def __len__(self):
         return len(self.dataset)
