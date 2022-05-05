@@ -20,17 +20,17 @@ class SignDataset(FairseqDataset):
         for level_feat_roots in self.feat_roots:
 
             #print(level_feat_roots, os.path.join(identifier + '.pt'))
-            #tensor = torch.load(os.path.join(level_feat_roots[0], identifier + '.pt'))
-            #print(os.path.join(os.path.join(level_feat_roots[0], identifier + '.pt')), len(tensor))
+            tensor = torch.load(os.path.join(level_feat_roots[0], identifier + '.pt'))
+            print(os.path.join(os.path.join(level_feat_roots[0], identifier + '.pt')), len(tensor))
 
 
-
+            '''
             features = []
             for feat_root in level_feat_roots:
                 if feat_root != None:
                     features.append(torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0))
             features = torch.cat(features, dim=1)
-
+            '''
 
 
             #features = [torch.cat(torch.load(os.path.join(feat_root, identifier + '.pt')), dim=0)
@@ -43,12 +43,12 @@ class SignDataset(FairseqDataset):
             #    print("NOPS")
 
 
-            all_features.append(features)
+            #all_features.append(features)
 
         #for i in range(len(all_features)):
         #    print(all_features[i].shape)
         #print(len(all_features))
-        return all_features
+        #return all_features
 
     def __len__(self):
         return len(self.dataset)
