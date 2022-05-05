@@ -141,12 +141,13 @@ def validate(args, trainer, task, epoch_itr, subsets):
         with metrics.aggregate(new_root=True) as agg:
             hyps, refs = [], []
 
-            print("\n\n\n",args.max_tokens_valid,args.max_sentences_valid)
+            print("\n\n\n",itr)
             print("\n\n\n\n",len(progress),"\n\n\n\n")
 
             for sample in progress:
                 logging_output, h, r = trainer.valid_step(sample, generate=True)
 
+                print(h, r)
                 hyps.extend(h)
                 refs.extend(r)
         
