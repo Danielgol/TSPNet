@@ -93,7 +93,7 @@ def main(args, init_distributed=False):
         rouge_score = rouge.rouge(h, r)
 
         for i in range(len(h)):
-            print(h[i], r[i]+"\n")
+            print(h[i], "||", r[i]+"\n")
 
         print('{} set has {} samples,\n'
               'sacrebleu: {},\n'
