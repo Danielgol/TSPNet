@@ -206,6 +206,8 @@ def collate(
     def build_src_tokens(samples):
         num_levels = len(samples[0]['source'])
 
+        print("OPPAAAA:", num_levels)
+
         multi_src_tokens, multi_src_lengths, multi_encoder_padding_mask = [], [], []
         for lv in range(num_levels):
             src_lengths = torch.LongTensor([len(s['source'][lv]) for s in samples])
