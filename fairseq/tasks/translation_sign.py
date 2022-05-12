@@ -44,7 +44,8 @@ def load_langpair_dataset(
 
     assert len(src_dataset) == len(tgt_dataset)
 
-    print(len(src_dataset), len(tgt_dataset))
+    for t in tgt_dataset:
+        print(t)
 
     logger.info('{} {} {}-{} {} examples'.format(
         data_path, split, src, tgt, len(src_dataset)
