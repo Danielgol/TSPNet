@@ -37,7 +37,7 @@ class SignDataset(FairseqDataset):
             features = torch.cat(features, dim=1)
             all_features.append(features)
             
-        return all_features
+        return all_features, identifier
 
     def __len__(self):
         return len(self.dataset)
