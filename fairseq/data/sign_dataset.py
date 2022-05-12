@@ -16,6 +16,7 @@ class SignDataset(FairseqDataset):
 
     def __getitem__(self, index):
         identifier = self.dataset[index]
+        print(len(self.dataset))
         all_features = []
         for level_feat_roots in self.feat_roots:
 
