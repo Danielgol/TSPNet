@@ -24,9 +24,6 @@ def load_sign_dataset(filepath, src_feat_roots):
     identifiers = [c['ident'] for c in content]
     sizes = [c['size'] for c in content]
 
-    for ident in identifiers:
-        print(ident)
-
     return SignDataset(identifiers, sizes, src_feat_roots)
 
 
