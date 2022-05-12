@@ -237,6 +237,7 @@ class TranslationSign(FairseqTask):
 
     def valid_step(self, sample, model, criterion):
         loss, sample_size, logging_output = super().valid_step(sample, model, criterion)
+        print(sample_size)
         if self.args.eval_bleu:
             bleu, hyps, refs = self._inference_with_bleu(self.sequence_generator, sample, model)
             logging_output['_bleu_sys_len'] = bleu.sys_len
