@@ -16,7 +16,6 @@ class SignDataset(FairseqDataset):
 
     def __getitem__(self, index):
         identifier = self.dataset[index]
-        print(len(self.dataset))
         all_features = []
         for level_feat_roots in self.feat_roots:
 
@@ -38,6 +37,7 @@ class SignDataset(FairseqDataset):
             features = torch.cat(features, dim=1)
             all_features.append(features)
             
+        print(identifier, len(features))
         return all_features
 
     def __len__(self):
