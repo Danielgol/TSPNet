@@ -211,6 +211,9 @@ def collate(
             src_lengths = torch.LongTensor([len(s['source'][lv]) for s in samples])
             # TODO: sort_order is assumed to be consistent among different feature levels, may need to verify this
             src_lengths, sort_order = src_lengths.sort(descending=True)
+
+            print(sort_order)
+
             src_tokens = collate_signs([s['source'][lv] for s in samples], left_pad_source)
             src_tokens = src_tokens.index_select(0, sort_order)
             encoder_padding_mask = torch.arange(src_lengths.max())[None, :] > src_lengths[:, None]
