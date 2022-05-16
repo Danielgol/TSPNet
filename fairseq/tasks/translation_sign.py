@@ -213,7 +213,7 @@ class TranslationSign(FairseqTask):
             multilv_args=multilv_args
         )
 
-        print(slp_dataset.src.dataset)
+        print("\n\n\n",len(slp_dataset.src.dataset),"\n\n\n")
 
         self.datasets[split] = slp_dataset
 
