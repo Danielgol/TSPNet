@@ -24,6 +24,8 @@ def load_sign_dataset(filepath, src_feat_roots):
     identifiers = [c['ident'] for c in content]
     sizes = [c['size'] for c in content]
 
+    # tentar acessar os identifiers pelo Dataset
+
     return SignDataset(identifiers, sizes, src_feat_roots)
 
 
@@ -44,7 +46,7 @@ def load_langpair_dataset(
 
     assert len(src_dataset) == len(tgt_dataset)
 
-    print(len(src_dataset), len(tgt_dataset))
+    print(src_dataset.dataset)
 
     logger.info('{} {} {}-{} {} examples'.format(
         data_path, split, src, tgt, len(src_dataset)

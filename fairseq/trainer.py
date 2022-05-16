@@ -468,10 +468,6 @@ class Trainer(object):
         # log validation stats
         logging_output = self._reduce_and_log_stats(logging_outputs, sample_size)
 
-
-        print(logging_outputs)
-
-
         if generate:
             return logging_output, hyps, refs
         else:
