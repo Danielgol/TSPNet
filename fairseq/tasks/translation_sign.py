@@ -46,8 +46,6 @@ def load_langpair_dataset(
 
     assert len(src_dataset) == len(tgt_dataset)
 
-    print(src_dataset.dataset)
-
     logger.info('{} {} {}-{} {} examples'.format(
         data_path, split, src, tgt, len(src_dataset)
     ))
@@ -202,7 +200,7 @@ class TranslationSign(FairseqTask):
             else:
                 break
 
-        self.datasets[split] = load_langpair_dataset(
+        slp_dataset = load_langpair_dataset(
             data_path, split,
             src, src_feat_roots,
             tgt, self.tgt_dict,
@@ -214,6 +212,10 @@ class TranslationSign(FairseqTask):
             use_bucketing=not self.args.disable_bucketing,
             multilv_args=multilv_args
         )
+
+        print(slp_dataset.src)
+
+        self.datasets[split] = slp_dataset
 
     @property
     def target_dictionary(self):
