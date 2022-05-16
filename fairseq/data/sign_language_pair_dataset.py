@@ -375,6 +375,9 @@ class SignLanguagePairDataset(FairseqDataset):
             'source': src_item,
             'target': tgt_item,
         }
+
+        print(example.id, example.source)
+
         # if self.align_dataset is not None:
         #     example['alignment'] = self.align_dataset[index]
         return example
