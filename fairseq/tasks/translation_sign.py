@@ -200,7 +200,7 @@ class TranslationSign(FairseqTask):
             else:
                 break
 
-        slp_dataset = load_langpair_dataset(
+        self.datasets[split] = load_langpair_dataset(
             data_path, split,
             src, src_feat_roots,
             tgt, self.tgt_dict,
@@ -212,8 +212,6 @@ class TranslationSign(FairseqTask):
             use_bucketing=not self.args.disable_bucketing,
             multilv_args=multilv_args
         )
-
-        self.datasets[split] = slp_dataset
 
     @property
     def target_dictionary(self):
