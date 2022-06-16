@@ -27,7 +27,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py data-bin/phoenix2014T/sp${VOCAB} \
         --src-lv1-body-feat-root i3d-features/span=12_stride=2 \
         --src-lv2-body-feat-root i3d-features/span=16_stride=2 \
         --arch transformer_sign \
-        --encoder-embed-dim 1984 \
+        --encoder-embed-dim 1024 \
         --decoder-embed-dim 300 \
         --warmup-updates 0 \
         --lr 1e-04 \
